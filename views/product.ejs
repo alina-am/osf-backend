@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Alibazon</title>
+    <link rel=stylesheet type=text/css href=../css/style-product.css>
+</head>
+
+<body>
+    <%-include('./partials/nav.ejs')%>
+    <main>
+        <p><small><a href="/">Home</a> / <a href="index.html">Subcategory Name</a></small></p>
+
+        <section class=product>
+            <img src="/images/<%=product[0].image_groups[0].images[0].link%>">
+            <div class=prod-descr>
+                <h3><%=product[0].page_title %></h3>
+                <p><%=product[0].page_description%></p>
+                <span>
+                    <span class='buy-now'><a>Buy now</a></span>
+                    <p>Price: <%=product[0].currency%> <%=product[0].price%></p>
+                    <p></p>
+                </span>
+            </div>
+            </div>
+        </section>
+    </main>
+    <%-include('./partials/footer.ejs')%>
+
+</body>
+
+</html>

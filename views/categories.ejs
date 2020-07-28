@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title><%=title %></title>
+    <link href=../css/style-categories.css rel=stylesheet type=text/css>
+</head>
+
+<body>
+    <%- include('./partials/nav.ejs') %>
+    <main>
+        <p><small><a href="/">Home</a> / <a href="">Subcategory Name</a></small></p>
+
+        <% for(let a=0; a<mains.length; a++){ 
+            if(mains[a]!=null) {
+            %>
+
+        <section id="main-category">
+            <h2><%=mains[a].name %></h2>
+            <p><%=mains[a].page_description %></p>
+        </section>
+
+        <section id="subcategories">
+            <h2>Subcategories</h2>
+            <%            
+            for (let i=0; i< mains[a].subcats.length; i++) { 
+                if(mains[a].subcats[i]!=null) {
+                %>
+            <article>
+                <img src="/images/<%=mains[a].subcats[i].image%>" alt="<%=mains[a].subcats[i].name %> image">
+                <p class="subcateg-descr"><%=mains[a].subcats[i].page_description %></p>
+                <span class='view-prod'><a href="/categories/<%=mains[a].subcats[i].id %>">View products</a></span>
+            </article>
+            <% }} %>
+        </section>
+
+        <% }} %>
+
+    </main>
+    <%- include('./partials/footer.ejs') %>
+</body>
+
+</html>

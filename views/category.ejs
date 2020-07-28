@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title><%=title%></title>
+    <link href=../css/style-products.css rel=stylesheet type=text/css>
+</head>
+
+<body>
+    <%-include('./partials/nav.ejs')%>
+    <main>
+
+        <section class=all-products>
+
+            <% for(let i=0; i <prod.length ; i++) { 
+                if(prod[i]!=null) {
+                %>
+
+            <section class="product">
+                <h3> <%=prod[i].name%></h3>
+                <div class="prod-info">
+                    <img src="/images/<%=prod[i].image_groups[0].images[0].link%>">
+                    <div class="prod-descr">
+                        <p><%=prod[i].page_description%></p>
+                        <span>
+                            <p>Price: <%=prod[i].currency %> <%=prod[i].price %></p>
+                            <span class='more-info'><a href="/products/productid=<%=prod[i].id %>">More
+                                    Info</a></span>
+                        </span>
+                    </div>
+                </div>
+            </section>
+
+            <% }}%>
+        </section>
+    </main>
+    <%-include('./partials/footer.ejs')%>
+</body>
+
+</html>

@@ -1,0 +1,42 @@
+<nav>
+    <div class="nav-wrapper">
+        <h1><%=title %></h1>
+        <span></span>
+        <span class="categ-button"><a>Category1</a></span>
+        <span class="categ-button"><a>Category2</a></span>
+    </div>
+    <style>
+        h1 {
+            font-size: xx-large;
+            font-weight: normal;
+            margin: 5px;
+        }
+
+        nav {
+            border: solid black 2px;
+        }
+
+        .nav-wrapper {
+            width: 75%;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .categ-button {
+            background-color: lightgray;
+            border: solid black 2px;
+            border-radius: 30px;
+            padding: 5px;
+        }
+
+        .current-categ {
+            background-color: red;
+            color: white;
+            border: solid black 2px;
+            border-radius: 30px;
+            padding: 5px;
+        }
+    </style>
+</nav>
