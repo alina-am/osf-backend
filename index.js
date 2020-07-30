@@ -5,8 +5,8 @@ const path = require("path");
 const routes = require("./routes/routes");
 const ejs = require('ejs');
 
-const Sentry = require('@sentry/node');
-Sentry.init({ dsn: 'https://05a4f8e4cd82412c99bb859b19ad8f63@o427022.ingest.sentry.io/5370511' });
+// const Sentry = require('@sentry/node');
+// Sentry.init({ dsn: 'https://05a4f8e4cd82412c99bb859b19ad8f63@o427022.ingest.sentry.io/5370511' });
 
 const app = express();
 

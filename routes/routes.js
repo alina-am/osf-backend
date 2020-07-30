@@ -35,14 +35,6 @@ router.get('/signup', (req, res, next) => {
 	});
 });
 
-// router.post(`${base_url}/auth/signup`, (req,res,next) => {
-
-// });
-
-// router.get('/signup-success', (req, res, next) => {
-// 	res.send('Success! Go to <a href="/signin">login.</a>')
-// });
-
 function getBreadcrumbsCategory(id) //some really bad code in here..
 {
 	let navArray = [];
@@ -94,15 +86,11 @@ function getBreadcrumbsCategory(id) //some really bad code in here..
 									console.log(error);
 								});
 						}
-					})
-					.catch(error => {
+					}).catch(error => {
 						console.log(error);
 					});
-
 			}
-			else {
-				return navArray;
-			}
+			else return navArray;
 		});
 }
 
