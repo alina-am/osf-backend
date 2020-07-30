@@ -9,7 +9,6 @@ main {
     border-bottom: solid black 3px;
 }
 
-
 .all-products {
     width: 100%;
     position: relative;
@@ -35,7 +34,7 @@ main {
 
 .prod-info img {
     margin-right: 30px;
-    height: 100%;
+    height: 160px;
 }
 
 .more-info {
@@ -44,9 +43,11 @@ main {
     border: solid black 2px;
     border-radius: 30px;
     padding: 4px; 
+    margin-left: 20px;
 }
 
-.prod-descr > span{
+.prod-descr > span {
+    width: 100%;
     display: flex;
     flex-direction: row;
     justify-content: space-between;

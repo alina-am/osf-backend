@@ -4,71 +4,150 @@ const path = require("path");
 const ejs = require('ejs');
 //const https = require('https');
 const got = require('got');
+const { response } = require('express');
 
 const base_url = 'https://osf-digital-backend-academy.herokuapp.com/api';
 const secretKey = '$2a$08$s/sg8ICyzui.5npPWwPq6u1RwzmABW.cVCGYrr6CmsLxGggoPEx4.';
 
-async function getBreadcrumbs(id) {
-	const navArray = [];
-	got(`${base_url}/categories/parent/${id}?secretKey=${secretKey}`, { async: true }).then(response => {
-		const parent = response.body;
-		navArray.push(parent[0].parent_category_id);
-
-		while (parent[0].parent_category_id != 'root') {
-			got(`${base_url}/categories/parent/${id}?secretKey=${secretKey}`).then(response => {
-				parent = response.body;
-				console.log(parent);
-				navArray.push(parent.parent_category_id);
-			}).catch(error => {
-				console.log(error.response.body);
-				res.status(404).end();
-			});
-		}
-	}).catch(error => {
-		console.log(error.response.body);
-		res.status(404).end();
-	});
-	return navArray;
-}
 
 // index page
 router.get('/', (req, res, next) => {
+	res.redirect('/home');
+});
+router.get('/home', (req, res, next) => {
 	res.render('index', {
 		title: 'Alibazon'
 	});
 });
 
+// get sign in page
+router.get('/signin', (req, res, next) => {
+	res.render('signin', {
+		title: 'Alibazon',
+	});
+});
+
+// get sign up page
+router.get('/signup', (req, res, next) => {
+	res.render('signup', {
+		title: 'Alibazon',
+		base_url
+	});
+});
+
+// router.post(`${base_url}/auth/signup`, (req,res,next) => {
+
+// });
+
+// router.get('/signup-success', (req, res, next) => {
+// 	res.send('Success! Go to <a href="/signin">login.</a>')
+// });
+
+function getBreadcrumbsCategory(id) //some really bad code in here..
+{
+	let navArray = [];
+	let parentId = id;
+	navArray.unshift(id);
+
+	return got(`${base_url}/categories/${parentId}`, { searchParams: { secretKey: secretKey } })
+		.then(response => {
+			let category = JSON.parse(response.body);
+
+			if (category.primary_category_id != null) {
+				parentId = category.primary_category_id
+			}
+			else {
+				parentId = category.parent_category_id;
+			}
+			navArray.unshift(parentId);
+
+			if (parentId != 'root') {
+				return got(`${base_url}/categories/${parentId}`, { searchParams: { secretKey: secretKey } })
+					.then(response => {
+						let categ = JSON.parse(response.body);
+						parentId = categ.parent_category_id;
+						navArray.unshift(parentId);
+						if (parentId == 'root') {
+							return navArray;
+						} else {
+							return got(`${base_url}/categories/${parentId}`, { searchParams: { secretKey: secretKey } })
+								.then(response => {
+									let categ = JSON.parse(response.body);
+									parentId = categ.parent_category_id;
+									navArray.unshift(parentId);
+									if (parentId == 'root') {
+										return navArray;
+									} else {
+										return got(`${base_url}/categories/${parentId}`, { searchParams: { secretKey: secretKey } })
+											.then(response => {
+												let categ = JSON.parse(response.body);
+												parentId = categ.parent_category_id;
+												navArray.unshift(parentId);
+												if (parentId == 'root') {
+													return navArray;
+												}
+											}).catch(error => {
+												console.log(error);
+											});
+									}
+								}).catch(error => {
+									console.log(error);
+								});
+						}
+					})
+					.catch(error => {
+						console.log(error);
+					});
+
+			}
+			else {
+				return navArray;
+			}
+		});
+}
+
+function getMainCategories() {
+	return got(`${base_url}/categories/parent/root`, { searchParams: { secretKey: `${secretKey}` } })
+		.then(response => {
+
+			// main categories
+			let mains = JSON.parse(response.body);
+			mains[0].subcats = [];
+			mains[1].subcats = [];
+			return mains;
+		})
+		.catch(error => {
+			console.log('error from getMains: ' + error);
+		});
+}
+
 // get all categories
-router.get('/categories', (req, res, next) => {
+router.get('/categories', function (req, res, next) {
 
-	got(`${base_url}/categories/parent/root`, { searchParams: { secretKey: `${secretKey}` } }).then(response => {
-
-		// main categories
-		var mains = JSON.parse(response.body);
-		mains[0].subcats = [];
-		mains[1].subcats = [];
+	// main categories
+	getMainCategories().then(mains => {
 
 		for (let i = 0; i < mains.length; i++) {
 
 			got(`${base_url}/categories/parent/${mains[i].id}`,
 				{ searchParams: { secretKey: `${secretKey}` } })
-				.then(response1 => {
-					mains[i].subcats = JSON.parse(response1.body);
+				.then(response => {
+					mains[i].subcats = JSON.parse(response.body);
 
 					if (i === mains.length - 1) {
 						res.render('categories.ejs', {
 							title: 'Alibazon',
-							mains
+							mains,
+							navArray: ['root', 'Categories']
 						});
 					}
 				}).catch(error => {
-					console.log(error.response1.body);
+					console.log(error);
 					res.status(404).end();
 				});
-
 		}
 	}).catch(error => {
-		console.log(error.response1.body);
+		console.log(error);
 		res.status(404).end();
 	});
 });
@@ -76,22 +155,75 @@ router.get('/categories', (req, res, next) => {
 // get category by id
 router.get('/categories/:id', (req, res, next) => {
 
-	got(`${base_url}/products/product_search?id=${req.params.id}`,
-		{
-			searchParams: { secretKey: `${secretKey}` }
-		}).then(response => {
-			// returns products from one category
-			let prod = null;
-			prod = JSON.parse(response.body);
-			console.log(`${req.params.id}`);
-			res.render('category.ejs', {
-				title: 'Alibazon',
-				prod
-			});
+	const hasSubcategory = ['mens', 'womens', "mens-clothing", "mens-accessories", "womens-clothing", "womens-jewelry", "womens-accessories"];
+
+	if (hasSubcategory.includes(req.params.id)) {
+		got(`${base_url}/categories/${req.params.id}`, { searchParams: { secretKey: `${secretKey}` } }).then(response => {
+
+			// main categories
+			var mains = [];
+			mains.push(JSON.parse(response.body));
+			mains.subcats = [];
+
+			for (let i = 0; i < mains.length; i++) {
+
+				got(`${base_url}/categories/parent/${mains[i].id}`,
+					{ searchParams: { secretKey: `${secretKey}` } })
+					.then(response => {
+						mains[i].subcats = JSON.parse(response.body);
+
+						getBreadcrumbsCategory(req.params.id).then(navArray => {
+
+							if (i === mains.length - 1) {
+								res.render('categories.ejs', {
+									title: 'Alibazon',
+									mains,
+									navArray
+								});
+							}
+						}).catch(error => {
+							console.log(error);
+						});
+					}).catch(error => {
+						console.log(error.response.body);
+						res.status(404).end();
+					});
+			}
 		}).catch(error => {
 			console.log(error.response.body);
 			res.status(404).end();
 		});
+	}
+	else {
+		got(`${base_url}/products/product_search`,
+			{
+				searchParams:
+				{
+					secretKey: `${secretKey}`,
+					primary_category_id: req.params.id
+				}
+			}).then(response => {
+
+				// returns products from subsubcategory
+				let prod = null;
+				prod = JSON.parse(response.body);
+
+				getBreadcrumbsCategory(req.params.id).then(navArray => {
+					res.render('category.ejs', {
+						title: 'Alibazon',
+						prod,
+						navArray
+					});
+				}).catch(error => {
+					console.log(error);
+				});
+
+
+			}).catch(error => {
+				console.log(error.response.body);
+				res.status(404).end();
+			});
+	}
 });
 
 // search for products
@@ -107,117 +239,21 @@ router.get('/products/productid=:prod_id', (req, res, next) => {
 
 			// returns one product
 			const product = JSON.parse(response.body);
-			res.render('product.ejs', {
-				title: 'Alibazon',
-				product,
-				base_url,
-				secretKey
+
+			getBreadcrumbsCategory(product[0].primary_category_id).then(navArray => {
+				res.render('product.ejs', {
+					title: 'Alibazon',
+					product,
+					navArray
+				});
+			}).catch(error => {
+				console.log(error);
 			});
+
+		}).catch(error => {
+			console.log(error.response.body);
+			res.status(404).end();
 		});
 });
 
-// get category by parent id
-router.get('/categories/parent/:parent-id', (req, res, next) => {
-
-});
-
-// get sign up page
-router.get('/auth/signup', (req, res, next) => {
-	res.send('You should register on this page');
-});
-
-// sign up 
-router.post('/auth/signup', (req, res, next) => {
-	res.send('User created!!');
-});
-
-// get sign in page
-router.get('/auth/signup', (req, res, next) => {
-	res.send('You should see the sign in page');
-});
-
-// sign in
-router.get('/auth/signin', (req, res, next) => {
-	res.send('Sign in successful');
-});
-
-//get cart
-router.get('/cart', (req, res, next) => {
-	res.send('You should see your cart on this page');
-});
-
-//add item to cart
-router.post('/cart/addItem', (req, res, next) => {
-	res.send('You should add an item to your cart on this page');
-});
-
-//remove item from cart
-router.delete('/cart/removeItem', (req, res, next) => {
-	res.send('You should delete an item from your cart on this page');
-});
-
-//change qty of item
-router.post('/cart/changeItemQuantity', (req, res, next) => {
-	res.send('You should the quantity of a product from your cart on this page');
-});
-
-//wishlist
-router.get('/wishlist', (req, res, next) => {
-	res.send('see wishlist');
-});
-
-// add item to wishlist
-router.post('/wishlist/addItem', (req, res, next) => {
-	res.send('add item to wishlist');
-});
-
-//remove item from wishlist
-router.delete('/wishlist/removeItem', (req, res, next) => {
-	res.send('delete item from wishlist');
-});
-
-//change qty of item in wishlist
-router.post('/wishlist', (req, res, next) => {
-	res.send('see wishlist');
-});
-
-//get orders
-router.get('/orders?secretKey=', (req, res, next) => {
-	//blabla
-});
-
-//create order
-router.get('/orders', (req, res, next) => {
-	//blabla
-});
-
 module.exports = router;
-
-// exports.index = function(req, res) {
-// 	res.render("index", { 
-// 		// Template data
-// 		title: "Express" 
-// 	});
-// };
-
-// exports.hello = function(req, res) {
-// 	var _         = require("underscore");
-// 	var mdbClient = require('mongodb').MongoClient;
-
-// 	mdbClient.connect("mongodb://localhost:27017/shop", function(err, db) {
-// 		var collection = db.collection('categories');
-
-// 		collection.find().toArray(function(err, items) {
-// 			res.render("hello", { 
-// 				// Underscore.js lib
-// 				_     : _, 
-
-// 				// Template data
-// 				title : "Hello World!",
-// 				items : items
-// 			});
-
-// 			db.close();
-// 		});
-// 	});
-// };

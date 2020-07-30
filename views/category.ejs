@@ -9,6 +9,18 @@
 <body>
     <%-include('./partials/nav.ejs')%>
     <main>
+        <p>
+            <small>
+                <%
+                    for (let k=0;k<navArray.length; k++){
+                        if(navArray[k]==='root'){
+                            navArray[k] = 'home'; %>
+                <a href="/<%=navArray[k]%>"><%=navArray[k]%></a> / %>
+                <% } else{ %>
+                <a href="/categories/<%=navArray[k]%>"><%=navArray[k]%></a> /
+                <% }} %>
+            </small>
+        </p>
 
         <section class=all-products>
 
@@ -21,11 +33,14 @@
                 <div class="prod-info">
                     <img src="/images/<%=prod[i].image_groups[0].images[0].link%>">
                     <div class="prod-descr">
-                        <p><%=prod[i].page_description%></p>
+                        <p><%-prod[i].short_description%></p>
                         <span>
                             <p>Price: <%=prod[i].currency %> <%=prod[i].price %></p>
-                            <span class='more-info'><a href="/products/productid=<%=prod[i].id %>">More
-                                    Info</a></span>
+                            <span class='more-info'>
+                                <a href="/products/productid=<%=prod[i].id %>">
+                                    More Info
+                                </a>
+                            </span>
                         </span>
                     </div>
                 </div>

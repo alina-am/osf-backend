@@ -2,8 +2,10 @@
     <div class="nav-wrapper">
         <h1><%=title %></h1>
         <span></span>
-        <span class="categ-button"><a>Category1</a></span>
-        <span class="categ-button"><a>Category2</a></span>
+        <span class="categ-button"><a href="/categories/womens">Womens</a></span>
+        <span class="categ-button"><a href="/categories/mens">Mens</a></span>
+
+        <span class="login-button"><a href="/signin">Sign in</a></span>
     </div>
     <style>
         h1 {
@@ -22,6 +24,13 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
+        }
+
+        .login-button {
+            position: absolute;
+            top: 28px;
+            right: 50px;
+            font-weight: bold;
         }
 
         .categ-button {

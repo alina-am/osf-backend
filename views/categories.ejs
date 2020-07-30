@@ -9,7 +9,19 @@
 <body>
     <%- include('./partials/nav.ejs') %>
     <main>
-        <p><small><a href="/">Home</a> / <a href="">Subcategory Name</a></small></p>
+        <p>
+            <small>
+                <%
+                    for (let k=0;k<navArray.length; k++){
+                        if(navArray[k]==='root'){
+                            %><a href="/home">Home</a> / %>
+                <% } else if(navArray[k]=== 'Categories') { %>
+                <a href="/<%=navArray[k]%>"><%=navArray[k]%></a> /
+                <% } else { %>
+                <a href="/categories/<%=navArray[k]%>"><%=navArray[k]%></a> /
+                <% }} %>
+            </small>
+        </p>
 
         <% for(let a=0; a<mains.length; a++){ 
             if(mains[a]!=null) {

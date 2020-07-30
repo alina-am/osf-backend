@@ -9,13 +9,25 @@
 <body>
     <%-include('./partials/nav.ejs')%>
     <main>
-        <p><small><a href="/">Home</a> / <a href="index.html">Subcategory Name</a></small></p>
+        <p>
+            <small>
+                <%
+                    for (let k=0;k<navArray.length; k++){
+                        if(navArray[k]==='root'){
+                            navArray[k] = 'home'; %>
+                <a href="/<%=navArray[k]%>"><%=navArray[k]%></a> / %>
+                <% } 
+                else { %>
+                <a href="/categories/<%=navArray[k]%>"><%=navArray[k]%></a> /
+                <% }} %><a href=""><%=product[0].id %></a>
+            </small>
+        </p>
 
         <section class=product>
             <img src="/images/<%=product[0].image_groups[0].images[0].link%>">
             <div class=prod-descr>
-                <h3><%=product[0].page_title %></h3>
-                <p><%=product[0].page_description%></p>
+                <h3><%=product[0].name%></h3>
+                <p><%-product[0].long_description%></p>
                 <span>
                     <span class='buy-now'><a>Buy now</a></span>
                     <p>Price: <%=product[0].currency%> <%=product[0].price%></p>

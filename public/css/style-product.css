@@ -12,6 +12,7 @@ main {
 .product {
     display: flex;
     flex-direction: row;
+    justify-content: center;
     align-items: center;
     margin-bottom: 50px;
 }
@@ -27,6 +28,10 @@ main {
     border: solid black 2px;
     border-radius: 30px;
     padding: 4px; 
+}
+
+.prod-descr {
+    min-width: 400px;
 }
 
 .prod-descr > span{
