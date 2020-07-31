@@ -13,7 +13,7 @@
             <small>
                 <%
                     for (var k=0;k<navArray.length-1; k++){
-                   if(navArray[k].id === 'categories' || navArray[k].id === 'home') { %>
+                   if(navArray[k].id === 'home') { %>
                 <a href="/<%=navArray[k].id%>"><%=navArray[k].name%></a> /
                 <% } else { %>
                 <a href="/categories/<%=navArray[k].id%>"><%=navArray[k].name%></a> /

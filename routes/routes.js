@@ -134,7 +134,7 @@ router.get('/home', function (req, res, next) {
 						res.render('categories.ejs', {
 							title: 'Alibazon',
 							mains,
-							navArray: [{ id: 'home', name: 'Home' }, { id: 'categories', name: 'Categories' }]
+							navArray: [{ id: 'home', name: 'Home' }]
 						});
 					}
 				}).catch(error => {
