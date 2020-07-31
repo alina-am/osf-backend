@@ -11,11 +11,6 @@ const secretKey = '$2a$08$s/sg8ICyzui.5npPWwPq6u1RwzmABW.cVCGYrr6CmsLxGggoPEx4.'
 router.get('/', (req, res, next) => {
 	res.redirect('/home');
 });
-router.get('/home', (req, res, next) => {
-	res.render('index', {
-		title: 'Alibazon'
-	});
-});
 
 // get sign in page
 router.get('/signin', (req, res, next) => {
@@ -123,7 +118,7 @@ function getMainCategories() {
 }
 
 // get all categories
-router.get('/categories', function (req, res, next) {
+router.get('/home', function (req, res, next) {
 
 	// main categories
 	getMainCategories().then(mains => {
@@ -186,7 +181,7 @@ router.get('/categories/:id', (req, res, next) => {
 							console.log(error);
 						});
 					}).catch(error => {
-						console.log(error.response.body);
+						console.log(error);
 						res.status(404).end();
 					});
 			}
@@ -225,7 +220,7 @@ router.get('/categories/:id', (req, res, next) => {
 	}
 });
 
-// search for products
+// Product page
 router.get('/products/productid=:prod_id', (req, res, next) => {
 	got(`${base_url}/products/product_search`,
 		{
@@ -240,7 +235,9 @@ router.get('/products/productid=:prod_id', (req, res, next) => {
 			const product = JSON.parse(response.body);
 
 			getBreadcrumbsCategory(product[0].primary_category_id).then(navArray => {
+
 				navArray.push({ id: product[0].id, name: product[0].name });
+
 				res.render('product.ejs', {
 					title: 'Alibazon',
 					product,
