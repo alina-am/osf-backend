@@ -37,13 +37,14 @@ main {
     height: 160px;
 }
 
-.more-info {
+.more-info a:link, .more-info a:visited{
     font-size: 14px;
-    background-color: lightgray;
-    border: solid black 2px;
-    border-radius: 30px;
-    padding: 4px; 
-    margin-left: 20px;
+    background-color: rgb(112, 112, 112);
+    color: white;
+    border-radius: 5px;
+    padding: 10px 14px;  
+    margin: 10px 0px;  
+    text-decoration: none;
 }
 
 .prod-descr > span {

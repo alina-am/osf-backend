@@ -1,8 +1,5 @@
 const express = require('express');
 const router = express.Router();
-const path = require("path");
-const ejs = require('ejs');
-//const https = require('https');
 const got = require('got');
 const { response } = require('express');
 
@@ -38,44 +35,57 @@ router.get('/signup', (req, res, next) => {
 function getBreadcrumbsCategory(id) //some really bad code in here..
 {
 	let navArray = [];
-	let parentId = id;
-	navArray.unshift(id);
+	//navArray.unshift({ parentId, name });
 
-	return got(`${base_url}/categories/${parentId}`, { searchParams: { secretKey: secretKey } })
+	return got(`${base_url}/categories/${id}`, { searchParams: { secretKey: secretKey } })
 		.then(response => {
-			let category = JSON.parse(response.body);
+			let categ = JSON.parse(response.body);
 
-			if (category.primary_category_id != null) {
+			name = categ.name;
+			navArray.unshift({ id, name });
+
+			if (categ.primary_category_id != null) {
 				parentId = category.primary_category_id
 			}
 			else {
-				parentId = category.parent_category_id;
+				parentId = categ.parent_category_id;
 			}
-			navArray.unshift(parentId);
 
 			if (parentId != 'root') {
 				return got(`${base_url}/categories/${parentId}`, { searchParams: { secretKey: secretKey } })
 					.then(response => {
 						let categ = JSON.parse(response.body);
+
+						name = categ.name;
+						navArray.unshift({ id: parentId, name });
 						parentId = categ.parent_category_id;
-						navArray.unshift(parentId);
+
 						if (parentId == 'root') {
+							navArray.unshift({ id: 'home', name: 'Home' });
 							return navArray;
 						} else {
 							return got(`${base_url}/categories/${parentId}`, { searchParams: { secretKey: secretKey } })
 								.then(response => {
 									let categ = JSON.parse(response.body);
+
+									name = categ.name;
+									navArray.unshift({ id: parentId, name });
 									parentId = categ.parent_category_id;
-									navArray.unshift(parentId);
+
 									if (parentId == 'root') {
+										navArray.unshift({ id: 'home', name: 'Home' });
 										return navArray;
 									} else {
 										return got(`${base_url}/categories/${parentId}`, { searchParams: { secretKey: secretKey } })
 											.then(response => {
 												let categ = JSON.parse(response.body);
+
+												name = categ.name;
+												navArray.unshift({ id: parentId, name });
 												parentId = categ.parent_category_id;
-												navArray.unshift(parentId);
+
 												if (parentId == 'root') {
+													navArray.unshift({ id: 'home', name: 'Home' });
 													return navArray;
 												}
 											}).catch(error => {
@@ -90,7 +100,10 @@ function getBreadcrumbsCategory(id) //some really bad code in here..
 						console.log(error);
 					});
 			}
-			else return navArray;
+			else {
+				navArray.unshift({ id: 'home', name: 'Home' });
+				return navArray;
+			}
 		});
 }
 
@@ -126,7 +139,7 @@ router.get('/categories', function (req, res, next) {
 						res.render('categories.ejs', {
 							title: 'Alibazon',
 							mains,
-							navArray: ['root', 'Categories']
+							navArray: [{ id: 'home', name: 'Home' }, { id: 'categories', name: 'Categories' }]
 						});
 					}
 				}).catch(error => {
@@ -205,10 +218,8 @@ router.get('/categories/:id', (req, res, next) => {
 				}).catch(error => {
 					console.log(error);
 				});
-
-
 			}).catch(error => {
-				console.log(error.response.body);
+				console.log(error);
 				res.status(404).end();
 			});
 	}
@@ -221,7 +232,7 @@ router.get('/products/productid=:prod_id', (req, res, next) => {
 			searchParams:
 			{
 				id: req.params.prod_id,
-				secretKey: `${secretKey}`
+				secretKey
 			}
 		}).then(response => {
 
@@ -229,6 +240,7 @@ router.get('/products/productid=:prod_id', (req, res, next) => {
 			const product = JSON.parse(response.body);
 
 			getBreadcrumbsCategory(product[0].primary_category_id).then(navArray => {
+				navArray.push({ id: product[0].id, name: product[0].name });
 				res.render('product.ejs', {
 					title: 'Alibazon',
 					product,

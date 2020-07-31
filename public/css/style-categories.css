@@ -6,31 +6,33 @@ main {
     width: 75%;
     position: relative;
     margin: 0 auto;
-    border-bottom: solid black 3px;
+    border-bottom: solid rgb(155, 155, 155) 0.05em;
 }
 
-h2 {
-    color: red;
-    font-weight: normal;
+#main-category h2 {
+    font-weight: 550;
 }
 
 #subcategories h2 {
-    margin-top: 50px;
+    margin-top: 30px;
+    font-weight: 400;
 }
 article {
     padding-bottom: 30px;
     padding-top: 30px;
-    border-top: solid black 3px;
+    border-top: solid rgb(155, 155, 155) 0.05em;
 }
 
 img {
     width: 100%;
 }
 
-.view-prod {
+.view-prod a:link, .view-prod a:visited{
     font-size: 14px;
-    background-color: lightgray;
-    border: solid black 2px;
-    border-radius: 30px;
-    padding: 5px 8px;    
+    background-color: rgb(112, 112, 112);
+    color: white;
+    border-radius: 5px;
+    padding: 8px 12px;  
+    margin: 15px 0px; 
+    text-decoration: none; 
 }

@@ -13,12 +13,10 @@
             <small>
                 <%
                     for (let k=0;k<navArray.length; k++){
-                        if(navArray[k]==='root'){
-                            %><a href="/home">Home</a> / %>
-                <% } else if(navArray[k]=== 'Categories') { %>
-                <a href="/<%=navArray[k]%>"><%=navArray[k]%></a> /
+                   if(navArray[k].id === 'categories' || navArray[k].id === 'home') { %>
+                <a href="/<%=navArray[k].id%>"><%=navArray[k].name%></a> /
                 <% } else { %>
-                <a href="/categories/<%=navArray[k]%>"><%=navArray[k]%></a> /
+                <a href="/categories/<%=navArray[k].id%>"><%=navArray[k].name%></a> /
                 <% }} %>
             </small>
         </p>

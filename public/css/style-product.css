@@ -24,11 +24,13 @@ main {
 
 .buy-now {
     font-size: 14px;
-    background-color: lightgray;
-    border: solid black 2px;
-    border-radius: 30px;
-    padding: 4px; 
+    background-color: rgb(112, 112, 112);
+    color: white;
+    border-radius: 5px;
+    padding: 8px 12px;  
+    margin: 15px 0px; 
 }
+
 
 .prod-descr {
     min-width: 400px;

@@ -4,7 +4,8 @@
   "description": "OSF Internship Project - Alibazon Ecommerce website",
   "main": "index.js",
   "scripts": {
-    "start": "node index"
+    "start": "node index",
+    "test": "mocha"
   },
   "repository": {
     "type": "git",
@@ -24,7 +25,9 @@
   "devDependencies": {
     "@sentry/cli": "^1.55.1",
     "@sentry/node": "^5.20.1",
-    "nyc": "^15.1.0",
-    "nodemon": "^2.0.4"
+    "chai": "^4.2.0",
+    "mocha": "^8.1.0",
+    "nodemon": "^2.0.4",
+    "nyc": "^15.1.0"
   }
 }

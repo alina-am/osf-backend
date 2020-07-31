@@ -1,21 +1,15 @@
 <nav>
     <div class="nav-wrapper">
-        <h1><%=title %></h1>
+        <h1 class="title"><a href="/"><%=title %></a></h1>
         <span></span>
         <span class="categ-button"><a href="/categories/womens">Womens</a></span>
         <span class="categ-button"><a href="/categories/mens">Mens</a></span>
-
         <span class="login-button"><a href="/signin">Sign in</a></span>
     </div>
     <style>
-        h1 {
-            font-size: xx-large;
-            font-weight: normal;
-            margin: 5px;
-        }
-
         nav {
-            border: solid black 2px;
+            background-color: rgb(223, 223, 223);
+            width: 100%;
         }
 
         .nav-wrapper {
@@ -26,26 +20,20 @@
             align-items: center;
         }
 
-        .login-button {
-            position: absolute;
-            top: 28px;
-            right: 50px;
-            font-weight: bold;
+        .nav-wrapper a {
+            font-size: 25px;
+            color: rgb(48, 48, 48);
+            text-decoration: none;
         }
 
-        .categ-button {
-            background-color: lightgray;
-            border: solid black 2px;
-            border-radius: 30px;
-            padding: 5px;
+        .title {
+            font-size: 30px;
+            font-weight: normal;
+            margin: 5px;
         }
 
-        .current-categ {
-            background-color: red;
-            color: white;
-            border: solid black 2px;
-            border-radius: 30px;
-            padding: 5px;
+        html {
+            margin: 0px;
         }
     </style>
 </nav>

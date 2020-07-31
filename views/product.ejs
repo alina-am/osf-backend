@@ -12,19 +12,18 @@
         <p>
             <small>
                 <%
-                    for (let k=0;k<navArray.length; k++){
-                        if(navArray[k]==='root'){
-                            navArray[k] = 'home'; %>
-                <a href="/<%=navArray[k]%>"><%=navArray[k]%></a> / %>
-                <% } 
-                else { %>
-                <a href="/categories/<%=navArray[k]%>"><%=navArray[k]%></a> /
-                <% }} %><a href=""><%=product[0].id %></a>
+                    for (var k=0;k<navArray.length-1; k++){
+                   if(navArray[k].id === 'categories' || navArray[k].id === 'home') { %>
+                <a href="/<%=navArray[k].id%>"><%=navArray[k].name%></a> /
+                <% } else { %>
+                <a href="/categories/<%=navArray[k].id%>"><%=navArray[k].name%></a> /
+                <% }} %>
+                <a href="/products/productid=<%=navArray[k].id%>"><%=navArray[k].name%></a>
             </small>
         </p>
 
         <section class=product>
-            <img src="/images/<%=product[0].image_groups[0].images[0].link%>">
+            <img src=" /images/<%=product[0].image_groups[0].images[0].link%>">
             <div class=prod-descr>
                 <h3><%=product[0].name%></h3>
                 <p><%-product[0].long_description%></p>
